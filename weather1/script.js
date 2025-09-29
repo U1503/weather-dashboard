@@ -396,11 +396,13 @@ function initializeMap() {
     });
 }
 
-function updateMap(lat, lon) { // Removed cityName parameter
+function updateMap(lat, lon) {
     if (!map) return;
-    
+
+    // This setTimeout is the critical fix. It gives the browser a moment
+    // to make the map container visible before we tell the map to resize.
     setTimeout(function() {
-        map.invalidateSize();
+        map.invalidateSize(); // This line tells the map to re-check its size
         map.setView([lat, lon], 12, { animate: true });
 
         if (marker) {
@@ -408,8 +410,6 @@ function updateMap(lat, lon) { // Removed cityName parameter
         } else {
             marker = L.marker([lat, lon]).addTo(map);
         }
-        
-        // Popup line has been removed
     }, 100);
 }
 
@@ -448,5 +448,6 @@ function initializeApp() {
         alert("Geolocation is not supported by your browser. Please search for a city manually.");
     }
 }
+
 
 initializeApp(); // Run when the script loads
